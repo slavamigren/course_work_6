@@ -1,0 +1,25 @@
+
+<div class="card">
+  <div class="card-body">
+    <table class="table table-striped">
+      <tr>
+        <th>№</th>
+        <th>Имя</th>
+        <th>email</th>
+        <th>Активен</th>
+        <th>Del</th>
+        <th>Upd</th>
+      </tr>
+      {% for object in object_list %}
+      <tr>
+        <td>{{ object.pk }}</td>
+        <td>{{ object.name }}</td>
+        <td>{{ object.mail }}</td>
+        <td>{{ object.is_active }}</td>
+        <td><a href="{% url 'mailing:delete_client' object.pk %}">Del</a></td>
+        <td><a href="{% url 'mailing:update_client' object.pk %}">Upd</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>

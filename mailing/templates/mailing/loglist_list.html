@@ -1,0 +1,39 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">Тексты рассылок</h1>
+    </div>
+
+    <div class="container">
+        <div class="row text-start">
+            <div class="col-lg-12 col-md-6 col-sm-12">
+
+
+                <div class="card">
+                  <div class="card-body">
+                    <table class="table table-striped">
+                      <tr>
+                        <th>№</th>
+                        <th>Рассылка</th>
+                        <th>Дата и время</th>
+                        <th>Успех / тип ошибки</th>
+                        <th>Успех / сообщение об ошибке</th>
+                      </tr>
+                      {% for object in object_list %}
+                        <tr>
+                          <td>{{ object.pk }}</td>
+                          <td>{{ object.mailing.name }}</td>
+                          <td>{{ object.time }}</td>
+                          <td>{{ object.error_type }}</td>
+                          <td>{{ object.error_message }}</td>
+                        </tr>
+                      {% endfor %}
+                    </table>
+                  </div>
+                </div>
+
+            </div>
+        </div>
+        {% include 'mailing/includes/pagination.html' with page=page_obj %}
+    </div>
+{% endblock %}

@@ -1,0 +1,37 @@
+
+<div class="card">
+  <div class="card-body">
+    <table class="table table-striped">
+      <tr>
+        <th>№</th>
+        <th>Название</th>
+        <th>Начало</th>
+        <th>Окончание</th>
+        <th>День недели</th>
+        <th>Описание</th>
+        <th>Del</th>
+        <th>Upd</th>
+      </tr>
+      {% for object in object_list %}
+      <tr>
+        <td>{{ object.pk }}</td>
+        <td><a href="{% url 'mailing:detail_mailing' object.pk %}">{{ object.name }}</a></td>
+        <td>{{ object.time_from }}</td>
+        <td>{{ object.time_to }}</td>
+        {% if object.week_day %}
+          <td>{{ object.week_day }}</td>
+        {% else %}
+          <td>-</td>
+        {% endif %}
+        {% if object.description %}
+          <td>{{ object.description }}</td>
+        {% else %}
+          <td>-</td>
+        {% endif %}
+        <td><a href="{% url 'mailing:delete_mailing' object.pk %}">Del</a></td>
+        <td><a href="{% url 'mailing:update_mailing' object.pk %}">Upd</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>

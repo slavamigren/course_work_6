@@ -1,0 +1,9 @@
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+    <h5 class="my-0 mr-md-auto font-weight-normal">Управление рассылками</h5>
+    <nav class="ms-5">
+        <a class="p-2 btn btn-outline-primary" href="/">Рассылки</a>
+        <a class="p-2 btn btn-outline-primary" href="{% url 'mailing:messages_list' %}">Тексты рассылок</a>
+        <a class="p-2 btn btn-outline-primary" href="{% url 'mailing:clients_list' %}">Клиенты</a>
+        <a class="p-2 btn btn-outline-primary" href="{% url 'mailing:loglist_list' %}">Посмотреть журнал ошибок</a>
+    </nav>
+</div>

@@ -1,0 +1,21 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">Тексты рассылок</h1>
+    </div>
+
+    <div class="container">
+        <div class = "col-12 mb-5">
+            <a href="{% url 'mailing:create_message' %}" class="btn btn-primary">Добавить сообщение</a>
+        </div>
+        <div class="row text-start">
+            <div class="col-lg-12 col-md-6 col-sm-12">
+
+                    {% include 'mailing/includes/message_card.html' %}
+
+            </div>
+
+        </div>
+        {% include 'mailing/includes/pagination.html' with page=page_obj %}
+    </div>
+{% endblock %}
