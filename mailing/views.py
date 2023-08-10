@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.contrib.messages import success
@@ -40,6 +40,12 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
     form_class = MailingModelForm
     success_url = reverse_lazy('mailing:mailing_list')
 
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.owner = self.request.user
+        self.object.save()
+        return super().form_valid(form)
+
 
 class MailingUpdateView(LoginRequiredMixin, UpdateView):
     """Редактирует рассылку пользователя"""
@@ -70,6 +76,12 @@ class MessageCreateView(LoginRequiredMixin, CreateView):
     model = Message
     form_class = MessageForm
     success_url = reverse_lazy('mailing:messages_list')
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.owner = self.request.user
+        self.object.save()
+        return super().form_valid(form)
 
 
 class MessageDeleteView(LoginRequiredMixin, DeleteView):
@@ -123,6 +135,12 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
     model = Client
     form_class = ClientForm
     success_url = reverse_lazy('mailing:clients_list')
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.owner = self.request.user
+        self.object.save()
+        return super().form_valid(form)
 
 
 class ClientDeleteView(LoginRequiredMixin, DeleteView):
@@ -183,6 +201,12 @@ class RedactMailingClientsListView(LoginRequiredMixin, ListView):
         context_data['emails_not_in_mailinglist'] = emails_not_in_mailinglist
         context_data['emails_in_mailinglist'] = emails_in_mailinglist
         context_data['pk_mailindmodel'] = self.kwargs['pk']
+
+        print(context_data['emails_not_in_mailinglist'])
+        print('----------------------------------------------------------------')
+        print(context_data['emails_in_mailinglist'])
+
+
         return context_data
 
     def get_queryset(self):
@@ -194,7 +218,7 @@ class RedactMailingClientsListView(LoginRequiredMixin, ListView):
 @login_required
 def add_client_to_mailinglist(request, **kwargs):
     """Добавляет клиента из Client в рассылку MailingList"""
-    MailingList.objects.create(mailing_model_id=kwargs['pk_mailindmodel'], client_id=kwargs['pk_client'])
+    MailingList.objects.create(mailing_model_id=kwargs['pk_mailindmodel'], client_id=kwargs['pk_client'], owner=request.user)
     return redirect(reverse('mailing:redact_mailing_clients', args=[kwargs['pk_mailindmodel']]))
 
 @login_required
@@ -216,11 +240,12 @@ def add_all_clients_to_mailinglist(request, **kwargs):
     """Удаляет всех клиентов (хранятся Client) из рассылки MailingList"""
 
     already_in_mailinglist = MailingList.objects.filter(mailing_model_id=kwargs['pk_mailindmodel'])
-    emails_not_in_mailinglist = Client.objects.exclude(id__in=already_in_mailinglist.values_list('client_id', flat=True))
+    emails_not_in_mailinglist = Client.objects.filter(owner=request.user)
+    emails_not_in_mailinglist = emails_not_in_mailinglist.exclude(id__in=already_in_mailinglist.values_list('client_id', flat=True))
     mailing_list = []
     for client_id in emails_not_in_mailinglist.values_list('id', flat=True):
         mailing_list.append(
-            MailingList(mailing_model_id=kwargs['pk_mailindmodel'], client_id=client_id)
+            MailingList(mailing_model_id=kwargs['pk_mailindmodel'], client_id=client_id, owner=request.user)
         )
     MailingList.objects.bulk_create(mailing_list)
 

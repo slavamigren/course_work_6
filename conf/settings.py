@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_crontab',
     'django_dump_load_utf8',  # python manage.py dumpdatautf8 --output data.json
     'users',
+    'blog',
 ]
 
 MIDDLEWARE = [

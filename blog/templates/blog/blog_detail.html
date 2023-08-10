@@ -1,0 +1,26 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+{% load my_tags %}
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">{{ object.title }}</h1>
+    </div>
+    <p style="text-align: center;">
+        <img src="{% mediapath object.avatar %}" class="img-fluid rounded-start" alt="{{ object.title }}">
+    </p>
+    <div class="container">
+        <div class="row text-center">
+            {{ object.text }}
+        </div>
+    </div>
+
+    <div class="card">
+        <p class="card-text text-center"><small class="text-body-secondary">views count: {{ object.views_count }}</small></p>
+        <div class="card-body text-center">
+            {% if owner %}
+                <a href="{% url 'blog:update_post' object.pk %}" class="btn btn-primary">Редактировать</a>
+                <a href="{% url 'blog:delete_post' object.pk %}" class="btn btn-primary">Удалить</a>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
