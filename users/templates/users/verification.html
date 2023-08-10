@@ -1,0 +1,33 @@
+{% extends 'mailing/base.html' %}
+
+{% block content %}
+</div>
+
+
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header"></div>
+                <div class="card-body">
+                    <form method="post">
+                        <p>
+                            {% if first_trial %}
+                                <label for="id_verification_code">Код верификации:</label>
+                            {% else %}
+                                <label for="id_verification_code">Введен неверный код верификации:</label>
+                            {% endif %}
+                            {% csrf_token %}
+                        <input type="text" name="verification_code" maxlength="10" class="form-control" id="id_verification_code">
+                        </p>
+                        <button type="submit" class="btn btn-success">Отправить</button>
+                        {% if not first_trial %}
+                            <a href="{% url 'users:send_verification' pk %}" class="btn btn-danger">Отправить ещё раз</a>
+                        {% endif %}
+                    </form>
+                </div>
+                <div class="card-footer"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

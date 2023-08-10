@@ -11,11 +11,13 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-import os, dotenv; dotenv.load_dotenv()
+import os, dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+dot_env = os.path.join(BASE_DIR, '.env')
+dotenv.load_dotenv(dotenv_path=dot_env)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -40,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mailing',
     'django_crontab',
+    'django_dump_load_utf8',  # python manage.py dumpdatautf8 --output data.json
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -148,5 +152,20 @@ EMAIL_ADMIN = EMAIL_HOST_USER
 
 USE_TZ = False  # использовать в моделях текущий часовой пояс
 
-CRONJOBS = [('*/2 * * * *', 'mailing.mailing_functions.check_adn_run_mailings')]
+CRONJOBS = [('0-59 * * * *', 'mailing.mailing_functions.check_adn_run_mailings')]
 
+AUTH_USER_MODEL = 'users.User'
+LOGOUT_REDIRECT_URL = '/users/'  # куда редиректит django.contrib.auth после разлогинивания
+LOGIN_REDIRECT_URL = '/'  # куда редиректит django.contrib.auth после авторизации
+LOGIN_URL = '/users/'  # куда редиректи LoginRequiredMixin, если пользователь не авторизован
+
+CACHE_ENABLED = os.getenv("CACHE_ENABLED") == True
+
+if CACHE_ENABLED:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": "redis://127.0.0.1:6379",
+            "TIMEOUT": 300,
+        }
+    }

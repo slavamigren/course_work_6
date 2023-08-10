@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
+from conf import settings
 
 NULLABLE = {'blank': True, 'null': True}
 
@@ -8,6 +9,8 @@ class Client(models.Model): # хранит имя клиента рассылк�
     name = models.CharField(max_length=50, verbose_name='имя клиента')
     mail = models.EmailField(max_length=50, verbose_name='email клиента')
     is_active = models.BooleanField(default=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE,
+                              verbose_name='пользователь')
 
     def __str__(self):
         return f'{self.name}: {self.mail}'
@@ -22,6 +25,8 @@ class Message(models.Model): # хранит шаблон письма
     name = models.CharField(max_length=30, verbose_name='название')
     title = models.CharField(max_length=200, **NULLABLE, verbose_name='тема письма')
     message = models.TextField(verbose_name='сообщение')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE,
+                              verbose_name='пользователь')
 
     def __str__(self):
         return f'{self.name}: {self.title}'
@@ -50,6 +55,9 @@ class MailingModel(models.Model): # хранит рассылку
     description = models.TextField(**NULLABLE, verbose_name='описание рассылки')
     message = models.ForeignKey(Message, on_delete=models.SET_NULL, **NULLABLE, verbose_name='текст рассылки')
     sent = models.BooleanField(default=False, verbose_name='рассылка проведена')
+    is_active = models.BooleanField(default=False, verbose_name='активна')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE,
+                              verbose_name='пользователь')
 
     def __str__(self):
         return f'{self.name}: weekday - {self.week_day}, time {self.time_from} - {self.time_to}'
@@ -61,23 +69,27 @@ class MailingModel(models.Model): # хранит рассылку
 
 
 class MailingList(models.Model): # хранит список рассылка-клиент
-    mailing = models.ForeignKey(MailingModel, on_delete=models.CASCADE, verbose_name='рассылка')
+    mailing_model = models.ForeignKey(MailingModel, on_delete=models.CASCADE, verbose_name='рассылка')
     client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='клиент')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE,
+                              verbose_name='пользователь')
 
     def __str__(self):
-        return f'{self.mailing}: -> {self.client}'
+        return f'{self.mailing_model}: -> {self.client}'
 
     class Meta:
         verbose_name = 'письмо'
         verbose_name_plural = 'письма'
-        unique_together = ('mailing', 'client')
+        unique_together = ('mailing_model', 'client')
 
 
 class LogList(models.Model): # лог ошибок и успехов при отправке почты
-    mailing = models.ForeignKey(MailingModel, on_delete=models.CASCADE, **NULLABLE, verbose_name='рассылка')
+    mailing_model = models.ForeignKey(MailingModel, on_delete=models.CASCADE, **NULLABLE, verbose_name='рассылка')
     time = models.DateTimeField(default=timezone.now, verbose_name='время рассылки')
     error_type = models.CharField(max_length=50, verbose_name='успех / тип ошибки')
     error_message = models.TextField(verbose_name='успех / сообщение об ошибке')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE,
+                              verbose_name='пользователь')
 
     class Meta:
         verbose_name = 'лог рассылки'

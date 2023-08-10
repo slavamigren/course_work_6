@@ -1,0 +1,66 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+{% include 'mailing/includes/mailing_menu.html' %}
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">Список клиентов рассылки</h1>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-1"></div>
+            <div class = "col-2 mb-5">
+                <a href="{% url 'mailing:detail_mailing' pk_mailindmodel %}" class="btn btn-primary">Вернуться в рассылку</a>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row text-start">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <h5 align="center">Добавлены в рассылку</h5>
+                <div class="card">
+                  <div class="card-body">
+                    <table class="table table-striped">
+                      <tr>
+                        <th>ID</th>
+                        <th>Имя</th>
+                        <th>email</th>
+                        <th>Активен</th>
+                        <th><a href="{% url 'mailing:delete_all_clients_from_mailinglist' pk_mailindmodel %}">>></a></th>
+                      </tr>
+                      {% for client in emails_in_mailinglist %}
+                        {% include 'mailing/includes/redact_mailing_clients_card_in.html' %}
+                      {% endfor %}
+                    </table>
+                  </div>
+                </div>
+
+
+            </div>
+
+              <div class="col-lg-6 col-md-6 col-sm-12">
+                <h5 align="center">Не в рассылке</h5>
+                <div class="card">
+                  <div class="card-body">
+                    <table class="table table-striped">
+                      <tr>
+                        <th><a href="{% url 'mailing:add_all_clients_to_mailinglist' pk_mailindmodel %}"><<</a></th>
+                        <th>ID</th>
+                        <th>Имя</th>
+                        <th>email</th>
+                        <th>Активен</th>
+
+                      </tr>
+                      {% for client in emails_not_in_mailinglist %}
+                        {% include 'mailing/includes/redact_mailing_clients_card_out.html' %}
+                      {% endfor %}
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+
+        </div>
+    </div>
+{% endblock %}

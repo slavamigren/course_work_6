@@ -1,15 +1,16 @@
 from django.urls import path
-from mailing.views import MailingModelListView, MessageListView, MessageCreateView, MessageDeleteView, \
+from mailing.views import MailinListView, MessageListView, MessageCreateView, MessageDeleteView, \
     MessageUpdateView, MessageDetailView, MailingCreateView, MailingDeleteView, MailingUpdateView, MailingDetailView, \
     LogListListView, ClientListView, ClientCreateView, ClientDeleteView, ClientUpdateView, ClientDetailView, \
-    MailingListDeleteView, MailingListCreateView
+    RedactMailingClientsListView, add_client_to_mailinglist, \
+    delete_client_from_mailinglist, delete_all_clients_from_mailinglist, add_all_clients_to_mailinglist
 from mailing.apps import MailingConfig
 
 app_name = MailingConfig.name
 
 
 urlpatterns = [
-    path('', MailingModelListView.as_view(), name='mailing_list'),
+    path('', MailinListView.as_view(), name='mailing_list'),
 
     path('create_mailing/', MailingCreateView.as_view(), name='create_mailing'),
     path('delete_mailing/<int:pk>/', MailingDeleteView.as_view(), name='delete_mailing'),
@@ -29,8 +30,11 @@ urlpatterns = [
     path('delete_client/<int:pk>/', ClientDeleteView.as_view(), name='delete_client'),
     path('update_client/<int:pk>/', ClientUpdateView.as_view(), name='update_client'),
     path('detail_client/<int:pk>/', ClientDetailView.as_view(), name='detail_client'),
-
-    path('delete_client_from_mailing/<int:pk>/', MailingListDeleteView.as_view(), name='delete_client_from_mailing'),
-    path('add_client_for_mailing/<int:pk>/', MailingListCreateView.as_view(), name='add_client_for_mailing'),
+    
+    path('redact_mailing_clients/<int:pk>/', RedactMailingClientsListView.as_view(), name='redact_mailing_clients'),
+    path('add_client_to_mailinglist/<int:pk_client>/<int:pk_mailindmodel>/', add_client_to_mailinglist, name='add_client_to_mailinglist'),
+    path('delete_client_to_mailinglist/<int:pk_client>/<int:pk_mailindmodel>/', delete_client_from_mailinglist, name='delete_client_to_mailinglist'),
+    path('delete_all_clients_from_mailinglist/<int:pk_mailindmodel>/', delete_all_clients_from_mailinglist, name='delete_all_clients_from_mailinglist'),
+    path('add_all_clients_to_mailinglist/<int:pk_mailindmodel>/', add_all_clients_to_mailinglist, name='add_all_clients_to_mailinglist'),
 
 ]

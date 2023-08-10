@@ -10,7 +10,7 @@ class ClientAdmin(admin.ModelAdmin):
 
 @admin.register(MailingModel)
 class MailingModelAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'time_from', 'time_to', 'week_day', 'description', 'sent')
+    list_display = ('pk', 'name', 'time_from', 'time_to', 'week_day', 'description', 'sent', 'is_active')
     list_filter = ('name', )
 
 
@@ -21,7 +21,7 @@ class MessageAdmin(admin.ModelAdmin):
 
 @admin.register(MailingList)
 class MailingListAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'mailing', 'client')
+    list_display = ('pk', 'mailing_model', 'client')
 
 
 @admin.register(LogList)

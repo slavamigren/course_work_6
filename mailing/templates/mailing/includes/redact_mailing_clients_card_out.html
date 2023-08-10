@@ -1,0 +1,7 @@
+<tr>
+  <td><a href="{% url 'mailing:add_client_to_mailinglist' client.pk pk_mailindmodel %}"><<</a></td>
+  <td>{{ client.pk }}</td>
+  <td>{{ client.name }}</td>
+  <td>{{ client.mail }}</td>
+  <td>{{ client.is_active }}</td>
+</tr>

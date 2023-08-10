@@ -1,12 +1,13 @@
 {% extends 'mailing/base.html' %}
 {% block content %}
+{% include 'mailing/includes/mailing_menu.html' %}
     <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
         <h1 class="display-4">{{ object.name }}</h1>
     </div>
 
     <div class="container">
         <div class = "col-12 mb-5">
-            <a href="{% url 'mailing:messages_list' %}" class="btn btn-primary">Назад</a>
+            <a href="{% url 'mailing:mailing_list' %}" class="btn btn-primary">Назад</a>
             <a href="{% url 'mailing:update_mailing' object.pk %}" class="btn btn-primary">Редактировать</a>
             <a href="{% url 'mailing:delete_mailing' object.pk %}" class="btn btn-primary">Удалить</a>
         </div>
@@ -43,6 +44,10 @@
                         <td class="w-25">Сообщение</td>
                         <td>{{ object.message.message }}</td>
                     </tr>
+                    <tr>
+                        <td class="w-25">Активна</td>
+                        <td>{{ object.is_active }}</td>
+                    </tr>
                 </table>
             </div>
         </div>
@@ -57,7 +62,7 @@
 
 
         <div class = "col-12 mb-5">
-            <a href="{% url 'mailing:add_client_for_mailing' object.pk %}" class="btn btn-primary">Добавить</a>
+            <a href="{% url 'mailing:redact_mailing_clients' object.pk %}" class="btn btn-primary">Редактировать</a>
 
         </div>
 
@@ -67,17 +72,15 @@
               <div class="card-body">
                 <table class="table table-striped">
                   <tr>
-                    <th>№</th>
+                    <th>ID</th>
                     <th>Имя</th>
                     <th>email</th>
-                    <th>Del</th>
                   </tr>
                   {% for letter in object.mailinglist_set.all %}
                       <tr>
                         <td>{{ letter.pk }}</td>
                         <td>{{ letter.client.name }}</td>
                         <td>{{ letter.client.mail }}</td>
-                        <td><a href="{% url 'mailing:delete_client_from_mailing' letter.pk %}">Del</a></td>
                       </tr>
                   {% endfor %}
                 </table>
