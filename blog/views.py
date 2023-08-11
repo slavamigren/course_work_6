@@ -7,6 +7,14 @@ from blog.models import Blog
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 
+class UserRequiredMixin:  # миксин блокирует доступ пользователя к чужим объектам
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.object.owner != self.request.user:
+            raise Http404
+        return self.object
+
+
 class BlogListView(LoginRequiredMixin, ListView):
     model = Blog
     paginate_by = 3
@@ -41,7 +49,7 @@ class BlogCreateView(LoginRequiredMixin, CreateView):
         self.object.save()
         return super().form_valid(form)
 
-class BlogDeleteView(LoginRequiredMixin, DeleteView):
+class BlogDeleteView(LoginRequiredMixin, UserRequiredMixin, DeleteView):
     model = Blog
     success_url = reverse_lazy('blog:blog')
 
@@ -52,7 +60,7 @@ class BlogDeleteView(LoginRequiredMixin, DeleteView):
         return self.object
 
 
-class BlogUpdateView(LoginRequiredMixin, UpdateView):
+class BlogUpdateView(LoginRequiredMixin, UserRequiredMixin, UpdateView):
     model = Blog
     form_class = BlogForm
 

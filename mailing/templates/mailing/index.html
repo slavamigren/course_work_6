@@ -1,0 +1,76 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+    <div class="pricing-header px-3 py-3 pt-md-1 pb-md-1 mx-auto text-center">
+        <h4 class="display-5">Ваша статистика</h4>
+    </div>
+
+    <div class="container">
+        <div class="row text-center">
+
+
+            <div class="col-4">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h5 class="my-0 font-weight-normal">
+                            Всего рассылок
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-title pricing-card-title">{{mailing_amount}}</h1>
+                        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                            <li></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h5 class="my-0 font-weight-normal">
+                            Активных рассылок
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-title pricing-card-title">{{active_mailing_amount}}</h1>
+                        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                            <li></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h5 class="my-0 font-weight-normal">
+                            Клиентов в базе
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-title pricing-card-title">{{client_amount}}</h1>
+                        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                            <li></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="pricing-header px-3 py-3 pt-md-4 pb-md-4 mx-auto text-center">
+        <h4 class="display-5">Наш блог</h4>
+    </div>
+
+    <div class="container">
+        <div class="row text-start">
+            <div class="col-lg-12 col-md-6 col-sm-12">
+
+                {% for object in object_list %}
+                    {% include 'blog/includes/post_card.html' %}
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
